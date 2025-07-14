@@ -1,75 +1,132 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  Modal,
+} from "react-native";
+import { Slider } from "@miblanchard/react-native-slider";
+import ModalPassword from "@/components/ModalPassword";
+import { useStorage } from "@/hooks/useStorage";
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+let charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
-export default function HomeScreen() {
+export default function App() {
+  const { saveItem } = useStorage();
+  const [value, setValue] = useState(10);
+  const [password, setPassword] = useState("");
+  const [openModal, setOpenModal] = useState(false);
+
+  function generatePassword() {
+    let password = "";
+
+    for (let i = 0, n = charset.length; i < value; i++) {
+      password += charset.charAt(Math.floor(Math.random() * n));
+    }
+
+    setPassword(password);
+    setOpenModal(true);
+  }
+
+  function saveToPasswords(passwordParam: string) {
+    if (passwordParam) {
+      saveItem("@password", passwordParam);
+
+      alert("Senha salva com sucesso!");
+      setOpenModal(false);
+      setPassword("");
+    }
+  }
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
+    <View style={styles.container}>
+      <Image source={require("@/assets/images/logo.png")} />
+      <Text style={styles.text}>{value} caracteres</Text>
+
+      {/* Sliders */}
+
+      <View style={styles.sliderBox}>
+        <Slider
+          minimumValue={6}
+          maximumValue={20}
+          step={1}
+          value={value}
+          onValueChange={(values) => setValue(values[0])}
+          containerStyle={styles.sliderContainer}
+          thumbStyle={styles.thumb}
+          minimumTrackStyle={{ backgroundColor: "#392DE9" }}
         />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+      </View>
+
+      <TouchableOpacity onPress={generatePassword} style={styles.button}>
+        <Text style={styles.buttonText}>Gerar Senha</Text>
+      </TouchableOpacity>
+
+      <Modal
+        visible={openModal}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setOpenModal(false)}
+      >
+        <ModalPassword
+          password={password}
+          handleClose={() => setOpenModal(false)}
+          handleSavePassword={saveToPasswords}
+        />
+      </Modal>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  container: {
+    flex: 1,
+    backgroundColor: "#F3F3F3",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 16,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  logo: {
+    marginBottom: 20,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  text: {
+    fontSize: 26,
+    fontWeight: "bold",
+  },
+  sliderBox: {
+    alignItems: "center",
+    justifyContent: "center",
+    width: 300,
+    height: 20,
+    padding: 25,
+    backgroundColor: "#FFF",
+    borderRadius: 5,
+    elevation: 5,
+  },
+  sliderContainer: {
+    width: "100%",
+  },
+  thumb: {
+    width: 15,
+    height: 15,
+    backgroundColor: "#392DE9",
+    borderRadius: 10,
+  },
+  button: {
+    width: 280,
+    backgroundColor: "#392DE9",
+    color: "#FFF",
+    height: 50,
+    padding: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 5,
+    marginTop: 10,
+  },
+  buttonText: {
+    color: "#FFF",
+    fontSize: 18,
+    fontWeight: "bold",
   },
 });
