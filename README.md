@@ -18,6 +18,12 @@ Aplicativo mobile desenvolvido em React Native com TypeScript que permite gerar 
 - 👀 **Visualização em tempo real**: Comprimento da senha mostrado dinamicamente
 - 💾 **Modal de confirmação**: Opções para salvar ou descartar a senha gerada
 
+## 🧪 Preview
+<img width="345" height="701" alt="image" src="https://github.com/user-attachments/assets/7b799b39-2d3c-4d81-aa1e-2eb2ff09531a" />
+<img width="345" height="701" alt="image" src="https://github.com/user-attachments/assets/890a7b0e-4910-4814-9de7-a659c9d40c3c" />
+
+
+
 ## 📱 Como executar
 
 ```bash
