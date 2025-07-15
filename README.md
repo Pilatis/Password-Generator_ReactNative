@@ -17,3 +17,18 @@ Aplicativo mobile desenvolvido em React Native com TypeScript que permite gerar 
 - 🔐 **Geração aleatória**: Letras maiúsculas, minúsculas e números
 - 👀 **Visualização em tempo real**: Comprimento da senha mostrado dinamicamente
 - 💾 **Modal de confirmação**: Opções para salvar ou descartar a senha gerada
+
+## 📱 Como executar
+
+```bash
+# Clone o repositório
+git clone https://github.com/seu-usuario/gerador-senhas-app.git
+
+# Acesse a pasta
+cd gerador-senhas-app
+
+# Instale as dependências
+npm install
+
+# Inicie o app com Expo
+npx expo start
